@@ -1,0 +1,16 @@
+﻿@page
+@model BudgetBuddy2.Pages.BudgetsModel
+@{
+    ViewData["Title"] = "Budgets";
+}
+
+<h2>Budgets</h2>
+
+<form method="POST">
+    <ul>
+        @for (int i = 0; i < Model.Budgets.Count; i++)
+        {
+            <li type="none"><a asp-page="./Budget" asp-route-id="@Model.Budgets[i].Id">@Model.Budgets[i].Name</a></li>
+        }
+    </ul>
+</form>
