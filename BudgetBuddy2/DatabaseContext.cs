@@ -37,7 +37,18 @@ namespace BudgetBuddy2
                             Incoming = true,
                             Items =
                             {
-                                new BudgetItem { Id = "1-1", Name = "Paycheck", ActualAmount = 4000, BudgetAmount = 4000 }
+                                new BudgetItem { Id = "1-1", Name = "Paycheck", BudgetAmount = 4000,
+                                    Actuals =
+                                    {
+                                        new ActualItem
+                                        {
+                                            Id = 1,
+                                            Date = DateTime.Now.AddDays(-2),
+                                            Description = "My paycheck",
+                                            Amount = 4004,
+                                        },
+                                    }
+                                }
                             }
                         },
                         new BudgetGroup
@@ -48,37 +59,28 @@ namespace BudgetBuddy2
                             Items =
                             {
                                 new BudgetItem { Id = "2-1", Name = "House payment", BudgetAmount = 1000 },
-                                new BudgetItem { Id = "2-2", Name = "Groceries", BudgetAmount = 1200 },
+                                new BudgetItem { Id = "2-2", Name = "Groceries", BudgetAmount = 1200,
+                                    Actuals =
+                                    {
+                                        new ActualItem
+                                        {
+                                            Id = 1,
+                                            Date = DateTime.Now.AddDays(-2),
+                                            Description = "Harris Teeter",
+                                            Amount = 40,
+                                        },
+                                        new ActualItem
+                                        {
+                                            Id = 2,
+                                            Date = DateTime.Now.AddDays(-1),
+                                            Description = "Walmart",
+                                            Amount = 220,
+                                        },
+                                    }
+                                },
                             }
                         },
                     },
-                    Actuals =
-                    {
-                        new ActualItem
-                        {
-                            ItemId = "1-1",
-                            Id = 1,
-                            Date = DateTime.Now.AddDays(-2),
-                            Description = "My paycheck",
-                            Amount = 4004,
-                        },
-                        new ActualItem
-                        {
-                            ItemId = "2-2",
-                            Id = 2,
-                            Date = DateTime.Now.AddDays(-2),
-                            Description = "Harris Teeter",
-                            Amount = 40,
-                        },
-                        new ActualItem
-                        {
-                            ItemId = "2-2",
-                            Id = 3,
-                            Date = DateTime.Now.AddDays(-1),
-                            Description = "Walmart",
-                            Amount = 220,
-                        },
-                    }
                 };
         }
 

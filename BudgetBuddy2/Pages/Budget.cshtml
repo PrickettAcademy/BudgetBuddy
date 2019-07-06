@@ -33,9 +33,15 @@
         font-size: 20pt;
     }
 
+    .item_cell {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
     .row_data {
         font-size: 12pt;
         text-align: left;
+        background: transparent;
     }
 
     .row_data_number {
@@ -60,13 +66,13 @@
     .hidden {
         display: none;
     }
-    .leftColumn {
-        float: right;
-        width: 60%;
+    .left_column {
+        vertical-align: top;
+        width: 40%;
     }
-    .rightColumn {
-        float: right;
-        width: 30%;
+    .right_column {
+        vertical-align: top;
+        width: 60%;
     }
     -->
 </style>
@@ -79,41 +85,52 @@
             itemRows[i].classList.remove('highlight');
         }
 
-        // highlight row
-        let selectedRow = document.getElementById('row_' + itemId);
-        selectedRow.classList.add('highlight');
-
-        // hide all actual rows
-        let actualRows = document.getElementsByClassName('actual_data');
-        for (i = 0; i < actualRows.length; i++) {
-            actualRows[i].classList.add('hidden');
+        if (itemId) {
+            // highlight row
+            let selectedRow = document.getElementById('row_' + itemId);
+            selectedRow.classList.add('highlight');
         }
 
-        // filter list
-        actualRows = document.getElementsByName('actual_' + itemId);
-        for (i = 0; i < actualRows.length; i++) {
-            actualRows[i].classList.remove('hidden');
+        // hide all actual tables
+        let actualTables = document.getElementsByClassName('actual_table');
+        for (i = 0; i < actualTables.length; i++) {
+            actualTables[i].classList.add('hidden');
+        }
+
+        if (itemId) {
+            // filter list
+            actualTable = document.getElementById('actuals_' + itemId);
+            if (actualTable) {
+                actualTable.classList.remove('hidden');
+            }
         }
 
         return false;
+    }
+
+    window.onload = function onLoad() {
+        // Clear any filters
+        var urlParams = new URLSearchParams(window.location.search);
+        itemId = urlParams.get("itemId");
+        setFilters(itemId);
     }
 </script>
 
 <form method="POST">
     <h2>Monthly Budget: <input class="title_input hidden_border" asp-for="Budget.Name" /> </h2>
     <input asp-for="Budget.Id" type="hidden" />
-    <table>
+    <table width="100%">
         <tr>
-            <td width="60%">
+            <td class="left_column">
                 <table id="items" class="table table-hover">
                     <thead>
                         <tr>
                             <th class="table_header hidden">Group</th>
                             <th class="table_header hidden">Id</th>
                             <th class="table_header"></th>
+                            <th class="table_header"></th>
                             <th class="table_header_number">Budget</th>
                             <th class="table_header_number">Actuals</th>
-                            <th class="table_header hidden"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,53 +142,60 @@
                             </tr>
                             @for (int i = 0; i < Model.Budget.Groups[g].Items.Count; i++)
                             {
-                            <tr class="item_data" id="row_@Model.Budget.Groups[g].Items[i].Id">
-                                <td><input class="row_data hidden_border" asp-for="Budget.Groups[g].Items[i].Id" /></td>
-                                <td><input class="row_data hidden_border" asp-for="Budget.Groups[g].Items[i].Name" /></td>
-                                <td><input class="row_data_number" asp-for="Budget.Groups[g].Items[i].BudgetAmount" /></td>
-                                <td><div class="row_data_number">@Model.Budget.Groups[g].Items[i].ActualAmount </div></td>
-                                <td><button onClick="return setFilters('@Model.Budget.Groups[g].Items[i].Id')">...</button></td>
-                            </tr>
-                            }
-                                <tr class="group">
-                                    <td><button type="submit" asp-page-handler="AddItem" asp-route-group="@Model.Budget.Groups[g].Name">+</button></td>
-                                    <td />
-                                    <td />
-                                    <td />
+                                <tr class="item_data" id="row_@Model.Budget.Groups[g].Items[i].Id">
+                                    <td class="item_cell"><input class="row_data hidden hidden_border" asp-for="Budget.Groups[g].Items[i].Id" /></td>
+                                    <td class="item_cell"><input class="row_data hidden_border" asp-for="Budget.Groups[g].Items[i].Name" /></td>
+                                    <td class="item_cell"><input class="row_data_number" asp-for="Budget.Groups[g].Items[i].BudgetAmount" /></td>
+                                    <td class="item_cell"><div class="row_data_number">@Model.Budget.Groups[g].Items[i].ActualAmount </div></td>
+                                    <td class="item_cell"><button onClick="return setFilters('@Model.Budget.Groups[g].Items[i].Id')">...</button></td>
                                 </tr>
+                            }
+                            <tr class="group">
+                                <td><button type="submit" asp-page-handler="AddItem" asp-route-group="@Model.Budget.Groups[g].Name">+</button></td>
+                                <td />
+                                <td />
+                                <td />
+                            </tr>
                         }
                     </tbody>
                 </table>
                 <button type="submit" asp-page-handler="AddGroup">Add Group</button>
             </td>
-            <td width="40%">
-                <table id="actuals" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="table_header">ItemId</th>
-                            <th class="table_header">Date</th>
-                            <th class="table_header">Description</th>
-                            <th class="table_header">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int a = 0; a < Model.Budget.Actuals.Count; a++)
-                        {
-                            <tr class="actual_data" name="actual_@Model.Budget.Actuals[a].ItemId">
-                                <td class="row_data"><input asp-for="Budget.Actuals[a].ItemId" /></td>
-                                <td class="row_data"><input asp-for="Budget.Actuals[a].Date" /></td>
-                                <td class="row_data"><input asp-for="Budget.Actuals[a].Description" /></td>
-                                <td class="row_data"><input asp-for="Budget.Actuals[a].Amount" /></td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <button type="submit" asp-page-handler="AddActual">Add</button>
+            <td class="right_column">
+                <!-- ADD a table for every budget item and show and hide the entire table -->
+                @for (int g = 0; g < Model.Budget.Groups.Count; g++)
+                {
+                    @for (int i = 0; i < Model.Budget.Groups[g].Items.Count; i++)
+                    {
+                        <div id="actuals_@Model.Budget.Groups[g].Items[i].Id" class="actual_table hidden">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="table_header">Date</th>
+                                        <th class="table_header">Description</th>
+                                        <th class="table_header">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int a = 0; a < Model.Budget.Groups[g].Items[i].Actuals.Count; a++)
+                                    {
+                                        <tr class="actual_data">
+                                            <td class="row_data"><input asp-for="Budget.Groups[g].Items[i].Actuals[a].Date" /></td>
+                                            <td class="row_data"><input asp-for="Budget.Groups[g].Items[i].Actuals[a].Description" /></td>
+                                            <td class="row_data"><input asp-for="Budget.Groups[g].Items[i].Actuals[a].Amount" /></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <button type="submit" asp-page-handler="AddActual" asp-route-group="@Model.Budget.Groups[g].Name" asp-route-itemId="@Model.Budget.Groups[g].Items[i].Id">Add</button>
+                        </div>
+                    }
+                }
             </td>
         </tr>
     </table>
 
     <p></p>
-    <button type="submit">Save changes</button>
+    <button type="submit" asp-page-handler="SaveChanges">Save changes</button>
 </form>
 

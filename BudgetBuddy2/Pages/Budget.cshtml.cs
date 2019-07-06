@@ -26,10 +26,10 @@ namespace BudgetBuddy2.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostSaveChangesAsync()
         {
             dbContext.PostBudget(Budget);
-            return Page();
+            return new RedirectToPageResult("Budget", Budget.Id);
         }
 
         public async Task<IActionResult> OnPostAddGroupAsync()
@@ -53,11 +53,16 @@ namespace BudgetBuddy2.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAddActualAsync()
+        public async Task<IActionResult> OnPostAddActualAsync(string group, string itemId)
         {
-            //if (!String.IsNullOrEmpty(FilteredActuals.GroupFilter) && !String.IsNullOrEmpty(FilteredActuals.ItemFilter))
+            var budgetGroup = Budget.Groups.FirstOrDefault(g => g.Name == group);
+            if (budgetGroup != null)
             {
-                //Budget.Actuals.Add(new ActualItem { BudgetGroup = FilteredActuals.GroupFilter, BudgetItem = FilteredActuals.ItemFilter, Id = 100 });
+                var item = budgetGroup.Items.FirstOrDefault(i => i.Id == itemId);
+                if (item != null)
+                {
+                    item.Actuals.Add(new ActualItem { Id = item.Actuals.Count + 1, Date = DateTime.Now });
+                }
             }
             return Page();
         }
