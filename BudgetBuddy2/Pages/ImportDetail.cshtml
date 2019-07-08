@@ -1,0 +1,35 @@
+﻿@page "{id:int}"
+@model BudgetBuddy2.Pages.ImportDetailModel
+@{
+    ViewData["Title"] = "ImportDetail";
+}
+
+<h2>Import details</h2>
+<form method="POST">
+    <input asp-for="Budget.Id" type="hidden" />
+        <table id="details" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="table_header">Date</th>
+                    <th class="table_header">Description</th>
+                    <th class="table_header">Amount</th>
+                    <th class="table_header">Budget Item</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int d = 0; d < Model.ImportDetails.Count; d++)
+                {
+                <tr class="item_data">
+                    <td class="item_cell"><div class="row_data_number">@Model.ImportDetails[d].Date</div></td>
+                    <td class="item_cell"><div class="row_data_number">@Model.ImportDetails[d].Description</div></td>
+                    <td class="item_cell"><div class="row_data_number">@Model.ImportDetails[d].Amount</div></td>
+                    <td class="item_cell"><select asp-for="ImportDetails[d].GroupItemId" asp-items="Model.SelectableBudgetItems"></select></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    <p></p>
+    <button type="submit" asp-page-handler="SaveChanges">Save changes</button>
+</form>
+
+

@@ -21,7 +21,19 @@ namespace BudgetBuddy2.Pages
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Budget = dbContext.GetBudget(id);
+            if (id <= 0)
+            {
+                Budget = dbContext.GetBudgetTemplate();
+            }
+            else
+            {
+                Budget = dbContext.GetBudget(id);
+            }
+
+            if (Budget == null)
+            {
+                return new NotFoundResult();
+            }
 
             return Page();
         }
@@ -30,6 +42,18 @@ namespace BudgetBuddy2.Pages
         {
             dbContext.PostBudget(Budget);
             return new RedirectToPageResult("Budget", Budget.Id);
+        }
+
+        public async Task<IActionResult> OnPostImportActualsAsync()
+        {
+            // Make sure to save the budget first
+            dbContext.PostBudget(Budget);
+
+            // Do import for this budget
+            // TODO
+
+            // Now redirect to the import page for this budget
+            return new RedirectToPageResult("ImportDetail", Budget.Id);
         }
 
         public async Task<IActionResult> OnPostAddGroupAsync()
