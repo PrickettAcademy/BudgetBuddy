@@ -1,0 +1,121 @@
+﻿@page "{id:int}"
+@model BudgetBuddy2.Pages.AccountModel
+@{
+    ViewData["Title"] = "Account";
+}
+
+<style>
+    <!--
+    .title_input {
+        font-size: 20pt;
+    }
+
+    .hidden_border {
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+    }
+
+    .hidden_border:hover {
+        border-top: 1px solid #d0d0d0;
+        border-bottom: 1px solid #d0d0d0;
+        border-left: 1px solid #d0d0d0;
+        border-right: 1px solid #d0d0d0;
+    }
+
+    .row_group {
+        font-size: 20pt;
+        padding-top: 20px;
+    }
+
+    .group_input {
+        font-size: 20pt;
+    }
+
+    .item_cell {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .row_data {
+        font-size: 12pt;
+        text-align: left;
+        background: transparent;
+    }
+
+    .row_data_number {
+        font-size: 12pt;
+        text-align: right;
+    }
+
+    .table_header {
+        font-size: 14pt;
+        text-align: left;
+    }
+
+    .table_header_number {
+        font-size: 14pt;
+        text-align: right;
+    }
+
+    .highlight {
+        background-color: aliceblue;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .left_column {
+        vertical-align: top;
+        width: 40%;
+    }
+
+    .right_column {
+        vertical-align: top;
+        width: 60%;
+    }
+    -->
+</style>
+
+<form method="POST">
+    <h2>Account: <input class="title_input hidden_border" asp-for="Account.Name" /> </h2>
+    <div>
+        <input asp-for="Account.Id" type="hidden" />
+        <label asp-for="Account.Description" />
+    </div>
+    <div>
+        <input asp-for="Account.Description" />
+        <label asp-for="Account.Balance" />
+    </div>
+    <div>
+        <input asp-for="Account.Balance" />
+        <label asp-for="Account.LastImportDate" />
+    </div>
+    <div>@Model.Account.LastImportDate</div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="table_header">Date</th>
+                <th class="table_header">Description</th>
+                <th class="table_header_number">Amount</th>
+                <th class="table_header">Reconcile</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int a = 0; a < Model.Account.Details.Count; a++)
+            {
+                <tr class="actual_data">
+                    <td class="row_data"><div>@Model.Account.Details[a].Date</div></td>
+                    <td class="row_data"><div>@Model.Account.Details[a].Description</div></td>
+                    <td class="row_data_number"><div>@Model.Account.Details[a].Amount</div></td>
+                    <td class="row_data"><div>@Model.Account.Details[a].Reconciled</div></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p></p>
+    <button type="submit" asp-page-handler="SaveChanges">Save changes</button>
+</form>
+

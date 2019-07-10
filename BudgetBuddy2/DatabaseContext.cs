@@ -9,13 +9,13 @@ namespace BudgetBuddy2
     {
         private LiteDatabase liteDB;
         private LiteCollection<Budget> Budgets { get; set; }
-        private LiteCollection<ImportDetail> ImportDetails { get; set; }
+        private LiteCollection<Account> Accounts { get; set; }
 
         public DatabaseContext()
         {
             liteDB = new LiteDatabase(@"budgetdata.db");
             Budgets = liteDB.GetCollection<Budget>("budgetsV1");
-            ImportDetails = liteDB.GetCollection<ImportDetail>("importDetailsV1");
+            Accounts = liteDB.GetCollection<Account>("accountsV1");
         }
 
         public List<Budget> GetBudgets()
@@ -91,20 +91,6 @@ namespace BudgetBuddy2
                 };
         }
 
-        public List<ImportDetail> GetImportDetails(int id, string source, bool reconciled)
-        {
-            var details = new List<ImportDetail>()
-            {
-                new ImportDetail { BudgetId = id, Source = source, Date = DateTime.Now, Description = "test 1", Amount = 100 },
-                new ImportDetail { BudgetId = id, Source = source, Date = DateTime.Now, Description = "test 2", Amount = 200 },
-                new ImportDetail { BudgetId = id, Source = source, Date = DateTime.Now, Description = "test 3", Amount = 300 },
-                new ImportDetail { BudgetId = id, Source = source, Date = DateTime.Now, Description = "test 4", Amount = 150 },
-                new ImportDetail { BudgetId = id, Source = source, Date = DateTime.Now, Description = "test 5", Amount = 10 },
-            };
-
-            return details;
-        }
-
         public void PostBudget(Budget budget)
         {
             if (budget.Id <= 0)
@@ -113,6 +99,26 @@ namespace BudgetBuddy2
             }
 
             Budgets.Upsert(budget.Id, budget);
+        }
+
+        public List<Account> GetAccounts()
+        {
+            return Accounts.FindAll().OrderByDescending(a => a.Id).ToList();
+        }
+
+        internal Account GetAccount(int id)
+        {
+            return Accounts.FindById(id);
+        }
+
+        internal void PostAccount(Account account)
+        {
+            if (account.Id <= 0)
+            {
+                account.Id = Accounts.Count() + 1;
+            }
+
+            Accounts.Upsert(account.Id, account);
         }
     }
 }

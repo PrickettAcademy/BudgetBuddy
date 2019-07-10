@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,44 +22,56 @@ namespace BudgetBuddy2.Pages
             this.dbContext = dbContext;
         }
 
-        [BindProperty]
-        public Budget Budget { get; set; }
+        public IFormFile ImportFile { get; set; }
 
         [BindProperty]
-        public List<ImportDetail> ImportDetails { get; set; }
+        public Account Account { get; set; }
 
-        [BindProperty]
-        public List<SelectListItem> SelectableBudgetItems { get; set; }
+        //[BindProperty]
+        //public List<SelectListItem> SelectableBudgetItems { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Budget = dbContext.GetBudget(id);
-            if (Budget == null)
+            Account = dbContext.GetAccount(id);
+            if (Account == null)
             {
                 return new NotFoundResult();
             }
 
-            SelectableBudgetItems = new List<SelectListItem>();
-            foreach (var group in Budget.Groups)
+            //SelectableBudgetItems = new List<SelectListItem>();
+            //foreach (var group in Budget.Groups)
+            //{
+            //    foreach (var item in group.Items)
+            //    {
+            //        SelectableBudgetItems.Add(new SelectListItem { Text = $"{group.Name}: {item.Name}" });
+            //    }
+            //}
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostImportFileAsync()
+        {
+            var importRecords = new List<DataImportRecord>();
+            using (var streamReader = new StreamReader(ImportFile.OpenReadStream()))
             {
-                foreach (var item in group.Items)
+                CsvReader csv = new CsvReader(streamReader, new Configuration() { HasHeaderRecord = true, Delimiter = "," });
+                while (csv.Read())
                 {
-                    SelectableBudgetItems.Add(new SelectListItem { Text = $"{group.Name}: {item.Name}" });
+                    DataImportRecord Record = csv.GetRecord<DataImportRecord>();
+                    importRecords.Add(Record);
                 }
             }
 
-            ImportDetails = dbContext.GetImportDetails(id, "bank", reconciled: false);
+            Account = dbContext.GetAccount(Account.Id);
 
-            var importRecords = await ImportFromFile(@"C:\Users\jpricket\Downloads\export_20190706.csv");
             foreach (var record in importRecords)
             {
-                ImportDetails.Add(new ImportDetail()
+                Account.Details.Add(new AccountDetail()
                 {
-                    BudgetId = id,
                     Date = record.Date,
                     Description = record.Description,
                     Amount = ConvertAmount(record.Amount),
-                    Source = "Coastal Federal Credit Union",
                     Reconciled = false,
                 });
             }
@@ -69,22 +82,6 @@ namespace BudgetBuddy2.Pages
         private double ConvertAmount(string amount)
         {
             return double.Parse(amount.Replace("$", ""));
-        }
-
-        private async Task<List<DataImportRecord>> ImportFromFile(string filename)
-        {
-            var result = new List<DataImportRecord>();
-            using (TextReader reader = System.IO.File.OpenText(filename))
-            {
-                CsvReader csv = new CsvReader(reader, new Configuration() { HasHeaderRecord = true, Delimiter = "," });
-                while (csv.Read())
-                {
-                    DataImportRecord Record = csv.GetRecord<DataImportRecord>();
-                    result.Add(Record);
-                }
-            }
-
-            return result;
         }
 
         public class DataImportRecord
