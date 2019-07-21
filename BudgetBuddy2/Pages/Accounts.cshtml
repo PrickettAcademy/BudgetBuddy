@@ -1,0 +1,18 @@
+﻿@page
+@model BudgetBuddy2.Pages.AccountsModel
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<h2>Accounts</h2>
+
+<form method="POST">
+    <ul>
+        @for (int i = 0; i < Model.Accounts.Count; i++)
+        {
+            <li type="none"><a asp-page="./Account" asp-route-id="@Model.Accounts[i].Id">@Model.Accounts[i].Name (@Model.Accounts[i].Id)</a></li>
+        }
+    </ul>
+</form>
+<p></p>
+<button onclick="window.location.href = 'Account/0';">New Account...</button>

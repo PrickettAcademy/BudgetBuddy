@@ -117,5 +117,9 @@
     </table>
     <p></p>
     <button type="submit" asp-page-handler="SaveChanges">Save changes</button>
+    @if (Model.Account.Id > 0)
+    {
+        <button type="submit" asp-page="ImportDetail" asp-route-id="@Model.Account.Id">Import details...</button>
+    }
 </form>
 

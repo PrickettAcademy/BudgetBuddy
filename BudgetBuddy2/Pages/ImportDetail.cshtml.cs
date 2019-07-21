@@ -27,8 +27,8 @@ namespace BudgetBuddy2.Pages
         [BindProperty]
         public Account Account { get; set; }
 
-        //[BindProperty]
-        //public List<SelectListItem> SelectableBudgetItems { get; set; }
+        [BindProperty]
+        public List<DataImportRecord> DataImportRecords { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -37,6 +37,8 @@ namespace BudgetBuddy2.Pages
             {
                 return new NotFoundResult();
             }
+
+            DataImportRecords = new List<DataImportRecord>();
 
             //SelectableBudgetItems = new List<SelectListItem>();
             //foreach (var group in Budget.Groups)
@@ -65,18 +67,46 @@ namespace BudgetBuddy2.Pages
 
             Account = dbContext.GetAccount(Account.Id);
 
-            foreach (var record in importRecords)
+            importRecords.Sort((r1, r2) => r1.Date.CompareTo(r2.Date));
+            var oldestDate = importRecords[0].Date;
+            var overlappingDetails = Account.Details
+                .Where(d => d.Date >= oldestDate)
+                .ToDictionary(d => GetHash(d.Date, d.Description, d.Amount));
+
+            DataImportRecords = importRecords
+                .Where(r => !overlappingDetails.ContainsKey(GetHash(r.Date, r.Description, ConvertAmount(r.Amount))))
+                .ToList();
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostSaveChangesAsync()
+        {
+            Account = dbContext.GetAccount(Account.Id);
+            double newBalance = Account.Balance;
+
+            foreach (var record in DataImportRecords)
             {
-                Account.Details.Add(new AccountDetail()
+                var detail = new AccountDetail()
                 {
                     Date = record.Date,
                     Description = record.Description,
                     Amount = ConvertAmount(record.Amount),
                     Reconciled = false,
-                });
+                };
+                Account.Details.Add(detail);
+                newBalance += detail.Amount;
             }
 
-            return Page();
+            Account.Balance = newBalance;
+            dbContext.PostAccount(Account);
+
+            return Redirect($"/account/{Account.Id}");
+        }
+
+        private string GetHash(DateTime date, string description, double amount)
+        {
+            return $"{date.GetHashCode()}|{description.GetHashCode()}|{amount.GetHashCode()}";
         }
 
         private double ConvertAmount(string amount)

@@ -1,17 +1,19 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BudgetBuddy2</title>
+    <title>@ViewData["Title"]</title>
+    <link href="@Href("~/StyleSheet.css")" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div class="container body-content">
+    <div id="wrapper">
+        <div id="header"><h1>BudgetBuddy</h1></div>
+        <div id="nav">
+            <a href="Index">Home</a> |
+            <a href="Accounts">Accounts</a> |
+            <a href="Budgets">Budgets</a> |
+        </div>
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2019 - BudgetBuddy2</p>
-        </footer>
     </div>
 </body>
 </html>

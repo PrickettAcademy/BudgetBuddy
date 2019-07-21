@@ -16,6 +16,8 @@
 </style>
 
 <h2>Import Account Details</h2>
+@if (Model.DataImportRecords.Count == 0)
+{
 <form method="post" enctype="multipart/form-data">
     <input asp-for="Account.Id" type="hidden" />
     <div class="form-group">
@@ -25,6 +27,9 @@
     </div>
     <input type="submit" asp-page-handler="ImportFile" />
 </form>
+}
+else
+{
 <form method="POST">
         <table id="details" class="table table-hover">
             <thead>
@@ -32,17 +37,17 @@
                     <th class="table_header">Date</th>
                     <th class="table_header">Description</th>
                     <th class="table_header">Amount</th>
-                    <th class="table_header">Reconciled</th>
+                    <th class="table_header">Balance</th>
                 </tr>
             </thead>
             <tbody>
-                @for (int d = 0; d < Model.Account.Details.Count; d++)
+                @for (int d = 0; d < Model.DataImportRecords.Count; d++)
                 {
                 <tr class="item_data">
-                    <td class=" item_cell"><div class="row_data"><input asp-for="Account.Details[d].Date" class="hidden_border" readonly /></div></td>
-                    <td class="item_cell"><div class="row_data"><input asp-for="Account.Details[d].Description" class="hidden_border" readonly /></div></td>
-                    <td class=" item_cell"><div class="row_data_number"><input asp-for="Account.Details[d].Amount" class="hidden_border" readonly /></div></td>
-                    <td class=" item_cell"><div class="row_data"><input asp-for="Account.Details[d].Reconciled" /></div></td>
+                    <td class=" item_cell"><div class="row_data"><input asp-for="DataImportRecords[d].Date" class="hidden_border" readonly /></div></td>
+                    <td class="item_cell"><div class="row_data"><input asp-for="DataImportRecords[d].Description" class="hidden_border" readonly /></div></td>
+                    <td class=" item_cell"><div class="row_data_number"><input asp-for="DataImportRecords[d].Amount" class="hidden_border" readonly /></div></td>
+                    <td class=" item_cell"><div class="row_data"><input asp-for="DataImportRecords[d].Balance" /></div></td>
                     <!--td class=" item_cell"><select asp-for="ImportDetails[d].GroupItemId" asp-items="Model.SelectableBudgetItems"></select></!--td>-->
                 </tr>
                 }
@@ -51,5 +56,6 @@
     <p></p>
     <button type="submit" asp-page-handler="SaveChanges">Save changes</button>
 </form>
+}
 
 
