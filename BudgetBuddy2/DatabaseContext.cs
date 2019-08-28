@@ -18,9 +18,9 @@ namespace BudgetBuddy2
             Accounts = liteDB.GetCollection<Account>("accountsV1");
         }
 
-        public List<Budget> GetBudgets()
+        public List<Budget> GetBudgets(int recentCount = 12)
         {
-            return Budgets.FindAll().OrderByDescending(b => b.Id).ToList();
+            return Budgets.FindAll().OrderByDescending(b => b.Id).Take(recentCount).ToList();
         }
 
         public Budget GetBudget(int id)
@@ -101,9 +101,9 @@ namespace BudgetBuddy2
             Budgets.Upsert(budget.Id, budget);
         }
 
-        public List<Account> GetAccounts()
+        public List<Account> GetAccounts(int recentCount = 12)
         {
-            return Accounts.FindAll().OrderByDescending(a => a.Id).ToList();
+            return Accounts.FindAll().OrderByDescending(a => a.Id).Take(recentCount).ToList();
         }
 
         internal Account GetAccount(int id)

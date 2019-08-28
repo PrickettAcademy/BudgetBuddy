@@ -1,0 +1,49 @@
+﻿@page
+@model BudgetBuddy2.Pages.ReconcileModel
+@{
+    ViewData["Title"] = "Reconcile";
+}
+
+<h2>Reconcile</h2>
+@if (Model.SelectedAccount == null)
+{
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="control-label">Budget:</label>
+            <select class="control" asp-items="Model.SelectableBudgets"></select>
+            <label class="control-label">Account:</label>
+            <select class="control" asp-items="Model.SelectableAccounts"></select>
+        </div>
+        <button type="submit" asp-page-handler="Reconcile">Reconcile</button>
+    </form>
+}
+else
+{
+    <form method="POST">
+        <table id="details" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="table_header">Date</th>
+                    <th class="table_header">Description</th>
+                    <th class="table_header">Amount</th>
+                    <th class="table_header">Balance</th>
+                </tr>
+            </thead>
+            <!--tbody>
+                for (int d = 0; d < Model.DataImportRecords.Count; d++)
+                {
+                    <tr class="item_data">
+                        <td class=" item_cell"><div class="row_data"><input asp-for="DataImportRecords[d].Date" class="hidden_border" readonly /></div></td>
+                        <td class="item_cell"><div class="row_data"><input asp-for="DataImportRecords[d].Description" class="hidden_border" readonly /></div></td>
+                        <td class=" item_cell"><div class="row_data_number"><input asp-for="DataImportRecords[d].Amount" class="hidden_border" readonly /></div></td>
+                        <td class=" item_cell"><div class="row_data"><input asp-for="DataImportRecords[d].Balance" /></div></td>
+                    </tr>
+                }
+            </tbody-->
+        </table>
+        <p></p>
+        <button type="submit" asp-page-handler="SaveChanges">Save changes</button>
+    </form>
+}
+
+

@@ -29,8 +29,13 @@ namespace BudgetBuddy2
 
         [Required]
         public string Name { get; set; }
+
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         public double BudgetAmount { get; set; }
+
         public IList<ActualItem> Actuals { get; private set; } = new List<ActualItem>();
+
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         public double ActualAmount
         {
             get
@@ -48,8 +53,15 @@ namespace BudgetBuddy2
     public class ActualItem
     {
         public int Id { get; set; }
+
+        //[DataType(DataType.Date)]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
+
         public string Description { get; set; }
+
+        //[DataType(DataType.Currency)]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         public double Amount { get; set; }
     }
 }

@@ -3,15 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
-    <link href="@Href("~/StyleSheet.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/StyleSheet.css" rel="stylesheet" type="text/css" />
+    <!--link href="@Href("~/Content/StyleSheet.css")" rel="stylesheet" type="text/css" /-->
 </head>
 <body>
     <div id="wrapper">
         <div id="header"><h1>BudgetBuddy</h1></div>
-        <div id="nav">
-            <a href="Index">Home</a> |
-            <a href="Accounts">Accounts</a> |
-            <a href="Budgets">Budgets</a> |
+        <div class="navBar">
+            <a class="navButton" href="/Index">Home</a>
+            <a class="navButton" href="/Accounts">Accounts</a>
+            <a class="navButton" href="/Budgets">Budgets</a>
         </div>
         @RenderBody()
     </div>

@@ -4,79 +4,6 @@
     ViewData["Title"] = "Budget";
 }
 
-<style>
-    <!--
-    .title_input {
-        font-size: 20pt;
-    }
-
-    .hidden_border {
-        border-top: 1px solid transparent;
-        border-bottom: 1px solid transparent;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-    }
-
-    .hidden_border:hover {
-        border-top: 1px solid #d0d0d0;
-        border-bottom: 1px solid #d0d0d0;
-        border-left: 1px solid #d0d0d0;
-        border-right: 1px solid #d0d0d0;
-    }
-
-    .row_group {
-        font-size: 20pt;
-        padding-top: 20px;
-    }
-
-    .group_input {
-        font-size: 20pt;
-    }
-
-    .item_cell {
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-
-    .row_data {
-        font-size: 12pt;
-        text-align: left;
-        background: transparent;
-    }
-
-    .row_data_number {
-        font-size: 12pt;
-        text-align: right;
-    }
-
-    .table_header {
-        font-size: 14pt;
-        text-align: left;
-    }
-
-    .table_header_number {
-        font-size: 14pt;
-        text-align: right;
-    }
-
-    .highlight {
-        background-color: aliceblue;
-    }
-
-    .hidden {
-        display: none;
-    }
-    .left_column {
-        vertical-align: top;
-        width: 40%;
-    }
-    .right_column {
-        vertical-align: top;
-        width: 60%;
-    }
-    -->
-</style>
-
 <script type="text/javascript">
     function setFilters(itemId) {
         // unhighlight all rows
@@ -151,15 +78,15 @@
                                 </tr>
                             }
                             <tr class="group">
-                                <td><button type="submit" asp-page-handler="AddItem" asp-route-group="@Model.Budget.Groups[g].Name">+</button></td>
-                                <td />
+                                <td class="item_cell" />
+                                <td><button class="plus_button" type="submit" asp-page-handler="AddItem" asp-route-group="@Model.Budget.Groups[g].Name">new item</button></td>
                                 <td />
                                 <td />
                             </tr>
                         }
                     </tbody>
                 </table>
-                <button type="submit" asp-page-handler="AddGroup">Add Group</button>
+                <button class="plus_button" type="submit" asp-page-handler="AddGroup">new group</button>
             </td>
             <td class="right_column">
                 <!-- ADD a table for every budget item and show and hide the entire table -->
@@ -180,7 +107,7 @@
                                     @for (int a = 0; a < Model.Budget.Groups[g].Items[i].Actuals.Count; a++)
                                     {
                                         <tr class="actual_data">
-                                            <td class="row_data"><input asp-for="Budget.Groups[g].Items[i].Actuals[a].Date" /></td>
+                                            <td class="row_data">@Html.EditorFor(m => m.Budget.Groups[g].Items[i].Actuals[a].Date, new { @Value = Model.Budget.Groups[g].Items[i].Actuals[a].Date.ToString("dd/MM/yyyy"), @class = "datepicker" })</td>
                                             <td class="row_data"><input asp-for="Budget.Groups[g].Items[i].Actuals[a].Description" /></td>
                                             <td class="row_data"><input asp-for="Budget.Groups[g].Items[i].Actuals[a].Amount" /></td>
                                         </tr>

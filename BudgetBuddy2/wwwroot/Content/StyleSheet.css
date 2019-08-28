@@ -1,0 +1,139 @@
+﻿body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 80%;
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    color: #0093c0;
+}
+
+#wrapper {
+    background-color: #8bcef8;
+    padding: 10px;
+    width: 800px;
+    margin: auto;
+    min-height: 600px;
+}
+
+.navBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navButton {
+    float: left;
+}
+
+.navButton {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navButton:hover {
+    background-color: #111;
+}
+
+.title_input {
+    font-size: 20pt;
+}
+
+.hidden_border {
+    border: 1px solid transparent;
+    background: transparent;
+}
+
+    .hidden_border:hover {
+        border: 1px solid #000000;
+        background: transparent;
+    }
+
+.row_group {
+    font-size: 20pt;
+    padding-top: 20px;
+}
+
+.group_input {
+    font-size: 20pt;
+}
+
+.item_cell {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-width: 20px;
+}
+
+.row_data {
+    font-size: 12pt;
+    text-align: left;
+    background: transparent;
+}
+
+.row_data_number {
+    font-size: 12pt;
+    text-align: right;
+}
+
+.plus_button {
+    background-color: transparent;
+    border: 1px solid #000000;
+    color: darkgray;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+    .plus_button:hover {
+        background-color: #8bcef8;
+        border: 1px solid #000000;
+        color: black;
+        padding: 2px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+.table_header {
+    font-size: 14pt;
+    text-align: left;
+}
+
+.table_header_number {
+    font-size: 14pt;
+    text-align: right;
+}
+
+.highlight {
+    background-color: aliceblue;
+}
+
+.actual_table {
+    background-color: aliceblue;
+    padding: 10px;
+    min-height: 600px;
+    min-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+.left_column {
+    vertical-align: top;
+    width: 40%;
+}
+
+.right_column {
+    vertical-align: top;
+    width: 60%;
+}
